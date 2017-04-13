@@ -1,0 +1,13 @@
+--
+-- Table structure for table `config`
+--
+
+CREATE TABLE `config` (
+  `last_ah_dump` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Inserting data for table `config`
+--
+
+INSERT INTO `config` (`last_ah_dump`) VALUES ('2012-10-03 20:13:03');
