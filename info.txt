@@ -1,0 +1,22 @@
+--Structure of db
+
+auctions
+    [   -- list of all items
+        rand
+        context
+        timeLeft    -- Long or ...
+        bid     -- bid in copper
+        buyout  -- buyout in copper
+        owner   -- its name
+        auc     -- ?aucid, quite sure!
+        ownerRealm
+        quantity    -- how much of it
+        item    -- itemid
+    ]
+realms
+    [   -- list of the different connected realms
+        slug
+        name
+    ]
+
+-- item info? http://www.wowuction.com/API/GetItemInfo/133563

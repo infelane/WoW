@@ -1,6 +1,10 @@
 """ Script to check the auction house """
 
+# 3th party libraries
 import urllib.request, json
+import time
+import pickle
+import sqlite3
 
 def main():
     # My WOW API key
@@ -8,21 +12,69 @@ def main():
 
     url = "https://us.api.battle.net/wow/auction/data/dragonmaw?locale=en_EU&apikey=" + key
 
-    with urllib.request.urlopen(url) as url:
-        data = json.loads(url.read().decode())['files'][0]
+    data = json_openener(url)
+
+    data = data['files'][0]
 
     print(data)
 
     t_lastmod = data['lastModified']
     url_lastmod = data['url']
+
     print(t_lastmod)
-
-    with urllib.request.urlopen(url) as url:
-
     sec2other(t_lastmod)
 
-def json_openener():
-    
+    new_data = False
+    if new_data:
+        data2 = json_openener(url_lastmod)
+        picke_saver(data2)
+
+    data2 = pickle_loader()
+    # print(data2)
+
+    # save data as SQL database
+    for foo in data2['auctions'][0]:
+        print(foo)
+
+    print(data2['auctions'][0])
+
+    new_sql= False
+    if new_sql:
+        make_sql()
+        save_sql(data2['auctions'])
+
+    sql_command = """ SELECT *
+    FROM auction
+    WHERE owner = 'Naidaddy'"""
+    sql_select(sql_command)
+
+
+def sql_select(sql_command):
+    connection = sqlite3.connect("ah.db")
+    cursor = connection.cursor()
+
+    cursor.execute(sql_command)
+    result = cursor.fetchall()
+    print(cursor.description)
+    for r in result:
+        print(r)
+
+def picke_saver(dictionary):
+    pickle.dump(dictionary, open("save.p", "wb"))
+
+
+def pickle_loader():
+    return pickle.load(open("save.p", "rb"))
+
+
+def json_openener(url_link):
+    start = time.time()
+    with urllib.request.urlopen(url_link) as url:
+        data = json.loads(url.read().decode())
+    end = time.time()
+    print("took {} secs".format(end - start))
+    return data
+
 
 # url = "http://maps.googleapis.com/maps/api/geocode/json?address=google"
 # url = "http://auction-api-us.worldofwarcraft.com/auction-data/64562f637ba0d2475075c0d61648d512/auctions.json"
@@ -47,29 +99,52 @@ def json_openener():
 #     # a = data.read()
 #     # print(data[0])
 #
-# a = 1/0
-#
+
+
+
+def save_sql(data):
+    # init
+    connection = sqlite3.connect("ah.db")
+    cursor = connection.cursor()
+
+    format_str = """INSERT INTO auction (owner, ownerrealm, itemid, buyout, auc, context, quantity, timeleft, seed, bid, rand)
+    VALUES ("{owner}", "{ownerRealm}", "{item}", "{buyout}", "{auc}", "{context}" , "{quantity}" , "{timeLeft}" , "{seed}" , "{bid}" , "{rand}");"""
+
+    for data_i in data:
+        sql_command = format_str.format(**data_i)
+        cursor.execute(sql_command)
+
+    connection.commit()
+    connection.close()
+
+def make_sql():
+    connection = sqlite3.connect("ah.db")
+    cursor = connection.cursor()
+
+    sql_command = """
+    CREATE TABLE auction (
+    auctionid INTEGER PRIMARY KEY,
+    owner VARCHAR(20),
+    ownerrealm VARCHAR(20),
+    itemid INT,
+    buyout REAL,
+    auc INT,
+    context INT,
+    quantity INT,
+    timeleft VARCHAR(10),
+    seed INT,
+    bid REAL,
+    rand INT);"""
+
+    cursor.execute(sql_command)
+    connection.close()
+
+
 def sec2other(sec):
-    import time
     date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(sec/1000))
     print(date_time)
 
-# import sqlite3
-# connection = sqlite3.connect("ah.db")
-#
-# cursor = connection.cursor()
-#
-# sql_command = """
-# CREATE TABLE employee (
-# staff_number INTEGER PRIMARY KEY,
-# fname VARCHAR(20),
-# lname VARCHAR(30),
-# gender CHAR(1),
-# joining DATE,
-# birth_date DATE);"""
-#
-# # cursor.execute(sql_command)
-#
+
 # sql_command = """INSERT INTO employee (staff_number, fname, lname, gender, birth_date)
 #     VALUES (NULL, "William", "Shakespeare", "m", "1961-10-25");"""
 # cursor.execute(sql_command)

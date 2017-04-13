@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$USER_HOME$/Documents/GitHub/AI_neural" vcs="Git" />
     <mapping directory="$USER_HOME$/Documents/GitHub/practicum" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>
