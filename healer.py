@@ -2,7 +2,7 @@
 opitimize healing done at a certain moment."""
 
 class Spell(object):
-    def __init__(self,cast_time = 0,  mana = 0, amount = 0, cd = 0):
+    def __init__(self,cast_time:float = 0,  mana = 0, amount = 0, cd = 0):
         self.cast_time = cast_time
         self.mana = mana
         self.amount = amount

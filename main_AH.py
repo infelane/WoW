@@ -6,11 +6,17 @@ import time
 import pickle
 import sqlite3
 
+
 def main():
     # My WOW API key
     key = "g4s923e95jgmyq5w24cra8gpc746b7rt"
+    
+    if 0:
+        server = 'dragonmaw'
+    else:
+        server = 'kazzak'
 
-    url = "https://us.api.battle.net/wow/auction/data/dragonmaw?locale=en_EU&apikey=" + key
+    url = "https://eu.api.battle.net/wow/auction/data/{}?locale=en_EU&apikey=".format(server) + key
 
     data = json_openener(url)
 
