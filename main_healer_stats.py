@@ -54,9 +54,14 @@ def conv_haste_rating_to_perc(haste_rating):
     # rating to percentage
     return haste_rating/400
 
+def get_conv():
+    conv = np.array([1, 400, 375, 400/3., 475])
+    return conv
+
 def conv_rating_to_perc(a):
+    """ correct conversion from rating to percentages """
     # int, crit, haste, mastery (3 times as strong for resto shaman), versatility
-    conv = np.array([1, 400, 375, 400*3, 475])
+    conv = get_conv()
     # 5% crit basis, 24 base mastery (or 8*3)
     bias = np.array([0, 5, 0, 24, 0])
     return a/conv + bias
@@ -73,6 +78,17 @@ def calc_riptide(intellect, haste, crit, mastery, versatility):
     
     return power_heal_direct + power_hot
 
+def data2list_percentage(data):
+    return np.array([data['int'], data['crit'], data['haste'], data['mastery'], data['versatilityHealingDoneBonus']])
+
+def print_data(lst, title):
+    print('\n{}:'.format(title))
+    print('\tInt: \t{}'.format(lst[0]))
+    print('\tCrit: \t{}'.format(lst[1]))
+    print('\tHaste: \t{}'.format(lst[2]))
+    print('\tMast: \t{}'.format(lst[3]))
+    print('\tVers: \t{}'.format(lst[4]))
+
 def calc_delta(data):
     
     spell_coeff_direct = 2.5
@@ -87,6 +103,70 @@ def calc_delta(data):
     delta_intellect = delta_int_direct + delta_int_hot
     
     delta_crit = delta_crit_direct + delta_crit_hot
+    
+    stats_perc = data2list_percentage(data)
+    
+    delta_direct = np.ones((5,))
+    delta_hot = np.ones((5,))
+    
+    conv = get_conv()
+    
+    mean_coef_direct = spell_coeff_direct
+    mean_coef_hot = spell_coeff_hot
+    
+    # direct
+    for i in range(5):
+        delta_direct[i] *= 1.05
+        for j in range(5):
+            if i != j:
+                if j == 0:
+                    delta_direct[i] *= stats_perc[j]
+                elif j == 2:
+                    delta_direct[i] *= 1
+                else:
+                    delta_direct[i] *= coeff_gen(stats_perc[j])
+    
+        if i != 0:
+            # to take into account percentages
+            delta_direct[i] /= 100.
+            
+        if i == 2:
+            # haste has no effect
+            delta_direct[i] *= 0
+
+        delta_direct[i] *= mean_coef_direct
+    
+        # TODO take into account that haste increases amount of casts
+        # TODO take into account that for shaman crit increases mana refund => amount of heals you can cast
+
+        delta_direct[i] /= conv[i]
+    
+    # hot
+    for i in range(5):
+        delta_hot[i] *= 1.05
+        for j in range(5):
+            if  i != j:
+                if j == 0:
+                    delta_hot[i] *= stats_perc[j]
+                else:
+                    delta_hot[i] *= coeff_gen(stats_perc[j])
+                    
+        if i != 0:
+            # to take into account percentages
+            delta_hot[i] /= 100.
+    
+        # HOT directly uses haste
+        delta_hot[i] *= mean_coef_hot
+
+
+        # TODO take into account that haste increases amount of casts
+        # TODO take into account that for shaman crit increases mana refund => amount of heals you can cast
+
+        delta_hot[i] /= conv[i]
+            
+                # delta[i] *= coeff_gen(stats_perc[j])
+    delta = delta_direct + delta_hot
+    print_data(delta, 'delta')
     
     return {'d_int':delta_intellect, 'd_crit':delta_crit}
 
@@ -121,6 +201,9 @@ def get_stats():
     stats_perc = [intellect, crit, haste, mastery, vers]
     stats_rating = [intellect, crit_rating, haste_rating, mastery_rating, vers_rating]
     stats_perc_calculated = conv_rating_to_perc(stats_rating)
+
+    print(stats_perc)
+    print(stats_perc_calculated)
     
     print(heal)
 
