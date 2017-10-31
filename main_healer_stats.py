@@ -81,6 +81,9 @@ def calc_riptide(intellect, haste, crit, mastery, versatility):
 def data2list_percentage(data):
     return np.array([data['int'], data['crit'], data['haste'], data['mastery'], data['versatilityHealingDoneBonus']])
 
+def data2list_rating(data):
+    return np.array([data['int'], data['critRating'], data['hasteRating'], data['masteryRating'], data['versatility']])
+
 def print_data(lst, title):
     print('\n{}:'.format(title))
     print('\tInt: \t{}'.format(lst[0]))
@@ -104,7 +107,7 @@ def calc_delta(data):
     
     delta_crit = delta_crit_direct + delta_crit_hot
     
-    stats_perc = data2list_percentage(data)
+    stats_perc = conv_rating_to_perc(data2list_rating(data))
     
     delta_direct = np.ones((5,))
     delta_hot = np.ones((5,))
@@ -138,6 +141,7 @@ def calc_delta(data):
     
         # TODO take into account that haste increases amount of casts
         # TODO take into account that for shaman crit increases mana refund => amount of heals you can cast
+        # TODO take into account does not always give the same percentage
 
         delta_direct[i] /= conv[i]
     
