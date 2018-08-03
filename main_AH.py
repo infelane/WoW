@@ -5,37 +5,13 @@ import urllib.request, json
 import time
 import pickle
 import sqlite3
+import datetime
+
 
 
 def main():
-    # My WOW API key
-    key = "g4s923e95jgmyq5w24cra8gpc746b7rt"
+
     
-    if 0:
-        server = 'dragonmaw'
-    else:
-        server = 'kazzak'
-
-    url = "https://eu.api.battle.net/wow/auction/data/{}?locale=en_EU&apikey=".format(server) + key
-
-    data = json_openener(url)
-
-    data = data['files'][0]
-
-    print(data)
-
-    t_lastmod = data['lastModified']
-    url_lastmod = data['url']
-
-    print(t_lastmod)
-    sec2other(t_lastmod)
-
-    new_data = False
-    if new_data:
-        data2 = json_openener(url_lastmod)
-        picke_saver(data2)
-
-    data2 = pickle_loader()
     # print(data2)
 
     # save data as SQL database
@@ -65,21 +41,10 @@ def sql_select(sql_command):
     for r in result:
         print(r)
 
-def picke_saver(dictionary):
-    pickle.dump(dictionary, open("save.p", "wb"))
 
 
-def pickle_loader():
-    return pickle.load(open("save.p", "rb"))
 
 
-def json_openener(url_link):
-    start = time.time()
-    with urllib.request.urlopen(url_link) as url:
-        data = json.loads(url.read().decode())
-    end = time.time()
-    print("took {} secs".format(end - start))
-    return data
 
 
 # url = "http://maps.googleapis.com/maps/api/geocode/json?address=google"
@@ -144,11 +109,6 @@ def make_sql():
 
     cursor.execute(sql_command)
     connection.close()
-
-
-def sec2other(sec):
-    date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(sec/1000))
-    print(date_time)
 
 
 # sql_command = """INSERT INTO employee (staff_number, fname, lname, gender, birth_date)
