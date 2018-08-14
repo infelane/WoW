@@ -1,27 +1,11 @@
 # 3th party libraries
-import urllib.request, json
-import time
 import pickle
-import sqlite3
 import datetime
-import os
 import pandas
-import numpy as np
 import matplotlib.pyplot as plt
 
-from AH.wow_api import json_openener
-
-
-def get_settings():
-    # My WOW API key
-    key = "g4s923e95jgmyq5w24cra8gpc746b7rt"
-    
-    if 0:
-        server = 'dragonmaw'
-    else:
-        server = 'kazzak'
-    
-    return key, server
+from api.wow_api import json_openener
+from login.credentials import get_settings
 
 
 def main():
