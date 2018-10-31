@@ -6,7 +6,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.5.2 virtualenv at /scratch/lameeus/virtualenv/tensorflow" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="AI_pract" />
     <orderEntry type="module" module-name="game_ai" />
     <orderEntry type="module" module-name="shake_removal" />
   </component>
