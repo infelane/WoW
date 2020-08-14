@@ -1,6 +1,6 @@
 """ trying to calculate what stats I want/need """
 
-import requests
+import requests2
 import numpy as np
 
 
@@ -14,11 +14,11 @@ def request_test(new = True):
     
         url = 'https://eu.api.battle.net/wow/character/{}/{}?fields={}&locale=en_EU&apikey='.format(realm_name, char_name, fields) + key
         
-        data = requests.json_openener(url)
-        requests.save_obj(data, file_name)
+        data = requests2.json_openener(url)
+        requests2.save_obj(data, file_name)
 
     else:
-        data = requests.load_obj(file_name)
+        data = requests2.load_obj(file_name)
         
     return data['stats']
 
