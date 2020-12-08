@@ -15,9 +15,14 @@ class Team:
         return self.units_ordered
 
     def fight(self, battle):
+
+        logs = []
         for unit in self.get_units_ordered():
             if unit:
-                unit.fight(battle)
+                log = unit.fight(battle)
+                logs.append(log)
+
+        return logs
 
 
 class EnemyTeam(Team):
