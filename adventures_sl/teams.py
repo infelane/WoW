@@ -20,7 +20,7 @@ class Team:
         for unit in self.get_units_ordered():
             if unit:
                 log = unit.fight(battle)
-                logs.append(log)
+                logs.extend(log)
 
         return logs
 

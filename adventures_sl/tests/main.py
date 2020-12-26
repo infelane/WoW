@@ -1,8 +1,10 @@
 import unittest
 
 from adventures_sl.teams import EnemyTeam, FriendlyTeam
-from adventures_sl.units import ExampleEnemy, ExampleFriendly, DarkGoliath, Gorgelimb, SecutorMevix,Emeni,MaldraxxusPlaguesinger, PlagueDeviserMarileth
-from adventures_sl.battles import Battle, WON,  LOST
+from adventures_sl.units import ExampleEnemy, ExampleFriendly, DarkGoliath, Gorgelimb, SecutorMevix, Emeni, \
+    MaldraxxusPlaguesinger, PlagueDeviserMarileth
+from adventures_sl.battles import Battle, WON, LOST
+
 
 class TestBattle(unittest.TestCase):
     def test_fight(self):
@@ -17,8 +19,8 @@ class TestBattle(unittest.TestCase):
 
     def test_fight2(self):
         """Balanced, starter, friendly, should win"""
-        health=20
-        attack=10
+        health = 20
+        attack = 10
         enemy_team = EnemyTeam(f0=ExampleEnemy(health=health, attack=attack))
         friendly_team = FriendlyTeam(f0=ExampleFriendly(health=health, attack=attack))
 
@@ -30,11 +32,11 @@ class TestBattle(unittest.TestCase):
 
     def test_fight_loss(self):
         """Barely lose"""
-        health=20
-        attack=health
+        health = 20
+        attack = health
         enemy = ExampleEnemy(health=health, attack=attack)
         enemy_team = EnemyTeam(f0=enemy)
-        friendly_team = FriendlyTeam(f0=ExampleFriendly(health=health, attack=attack-1))
+        friendly_team = FriendlyTeam(f0=ExampleFriendly(health=health, attack=attack - 1))
 
         battle = Battle(friendly_team,
                         enemy_team)
@@ -47,7 +49,7 @@ class TestBattle(unittest.TestCase):
         with self.subTest('logs'):
             logs = battle.get_logs()
 
-            self.assertEqual(attack-1, logs[0][-1], 'friendly attack')
+            self.assertEqual(attack - 1, logs[0][-1], 'friendly attack')
             self.assertEqual(attack, logs[1][-1], 'enemy attack')
 
     def test_vid1(self):
@@ -70,7 +72,8 @@ class TestBattle(unittest.TestCase):
 
         outcome = battle.start()
 
-        self.assertTrue(outcome) # TODO
+        self.assertTrue(outcome)  # TODO
+
 
 if __name__ == '__main__':
     unittest.main()
